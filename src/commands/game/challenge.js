@@ -1,4 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
+import { matches } from '../matches';
+import { ChessMatch } from '../../gameHandler';
 
 export default {
     data: new SlashCommandBuilder()
@@ -96,6 +98,12 @@ export default {
 
                             await confirmation.update({ embeds: [acceptEmbed] })
                             await interaction.channel.send({ embeds: [acceptEmbed2] })
+
+                            const match = new ChessMatch({ users: [interaction.user, user] })
+                            matches.set(gameId, match)
+
+                            console.log("NEW MATCH CREATED:")
+                            console.dir(match)
                         }
                         else if (confirmation.customId === 'cancel') {
                             await confirmation.update("Challenge declined.")
