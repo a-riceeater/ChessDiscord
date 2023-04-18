@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
-import { matches } from '../matches';
-import { ChessMatch } from '../../gameHandler';
+import { matches } from '../../matches.js';
+import { ChessMatch } from '../../gameHandler.js';
 
 export default {
     data: new SlashCommandBuilder()

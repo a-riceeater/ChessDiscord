@@ -1,4 +1,4 @@
-import { matches } from './matches'
+import { matches } from './matches.js'
 import { Chess } from 'chess.js'
 
 export class ChessMatch {
