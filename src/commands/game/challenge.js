@@ -32,6 +32,8 @@ export default {
                 .setFooter({ text: `Interaction created by ${interaction.user.tag}`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
             interaction.reply({ embeds: [error] })
+
+            commented out for testing purposes
         } else*/ if (user.bot) {
             const error = new EmbedBuilder()
                 .setColor('#FF0000')
@@ -76,8 +78,8 @@ export default {
                     const resp = await user.send({ embeds: [challengeEmbed], components: [row] })
 
 
-                    const filter = i => i.user.id === interaction.user.id;
                     try {
+                        const filter = i => i.user.id === interaction.user.id;
                         const confirmation = await resp.awaitMessageComponent({ filter });
 
                         if (confirmation.customId === 'accept') {
@@ -110,10 +112,69 @@ export default {
 
                         }
                     } catch (e) {
-                        await user.send(`\`\`\`${e}\`\`\``)
+                        await user.send(`**An error occured: **\n\`\`\`${e}\`\`\``)
                     }
 
                 } else {
+                    const challengeEmbed = new EmbedBuilder()
+                        .setColor("#347aeb")
+                        .setTitle("You recieved a challenge!")
+                        .setDescription(`${interaction.user} wants to play a game of chess!`)
+                        .setTimestamp()
+                        .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+
+                    const accept = new ButtonBuilder()
+                        .setCustomId('accept')
+                        .setLabel('Accept Challenge')
+                        .setStyle(ButtonStyle.Success);
+
+                    const decline = new ButtonBuilder()
+                        .setCustomId('cancel')
+                        .setLabel('Decline')
+                        .setStyle(ButtonStyle.Danger);
+
+                    const row = new ActionRowBuilder()
+                        .addComponents(accept, decline);
+
+                    const resp = await interaction.channel.send({ embeds: [challengeEmbed], components: [row] })
+
+
+                    try {
+                        const filter = i => i.user.id === interaction.user.id;
+                        const confirmation = await resp.awaitMessageComponent({ filter });
+
+                        if (confirmation.customId === 'accept') {
+
+                            const acceptEmbed = new EmbedBuilder()
+                                .setTitle("Challenge accepted!")
+                                .setDescription(`You accepted the challenge from ${interaction.user}`)
+                                .setColor("#2a780d")
+                                .setTimestamp()
+                                .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+
+                            const acceptEmbed2 = new EmbedBuilder()
+                                .setTitle(`${interaction.user.tag}, your challenge was accepted!`)
+                                .setDescription(`Your challenge from ${user} was accepted.`)
+                                .setColor("#2a780d")
+                                .setTimestamp()
+                                .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+
+                            await confirmation.update({ embeds: [acceptEmbed] })
+                            await interaction.channel.send({ embeds: [acceptEmbed2] })
+
+                            const match = new ChessMatch({ users: [interaction.user, user] })
+                            matches.set(gameId, match)
+
+                            console.log("NEW MATCH CREATED:")
+                            console.dir(match)
+                        }
+                        else if (confirmation.customId === 'cancel') {
+                            await confirmation.update("Challenge declined.")
+
+                        }
+                    } catch (e) {
+                        await interaction.channel.send(`\`\`\`${e}\`\`\``)
+                    }
 
                 }
             }, 1000)
