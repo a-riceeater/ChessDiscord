@@ -98,14 +98,13 @@ export default {
                                 .setTimestamp()
                                 .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
-                            await confirmation.update({ embeds: [acceptEmbed] })
+                            await confirmation.update({ embeds: [acceptEmbed], components: [] })
                             await interaction.channel.send({ embeds: [acceptEmbed2] })
 
-                            const match = new ChessMatch({ users: [interaction.user, user] })
-                            matches.set(gameId, match)
+                            const match = new ChessMatch(JSON.stringify({ users: [interaction.user, user] }))
+                            matches.set(match.gameId, match)
 
-                            console.log("NEW MATCH CREATED:")
-                            console.dir(match)
+                            console.log("NEW MATCH CREATED. ID:", match.gameId)
                         }
                         else if (confirmation.customId === 'cancel') {
                             await confirmation.update("Challenge declined.")
@@ -113,12 +112,13 @@ export default {
                         }
                     } catch (e) {
                         await user.send(`**An error occured: **\n\`\`\`${e}\`\`\``)
+                        console.error(e);
                     }
 
                 } else {
                     const challengeEmbed = new EmbedBuilder()
                         .setColor("#347aeb")
-                        .setTitle("You recieved a challenge!")
+                        .setTitle(user.tag + ", you recieved a challenge!")
                         .setDescription(`${interaction.user} wants to play a game of chess!`)
                         .setTimestamp()
                         .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
@@ -159,21 +159,21 @@ export default {
                                 .setTimestamp()
                                 .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
-                            await confirmation.update({ embeds: [acceptEmbed] })
+                            await confirmation.update({ embeds: [acceptEmbed], components: [] })
                             await interaction.channel.send({ embeds: [acceptEmbed2] })
 
-                            const match = new ChessMatch({ users: [interaction.user, user] })
-                            matches.set(gameId, match)
+                            const match = new ChessMatch(JSON.stringify({ users: [interaction.user, user] }))
+                            matches.set(match.gameId, match)
 
-                            console.log("NEW MATCH CREATED:")
-                            console.dir(match)
+                            console.log("NEW MATCH CREATED. ID:", match.gameId)
                         }
                         else if (confirmation.customId === 'cancel') {
                             await confirmation.update("Challenge declined.")
 
                         }
                     } catch (e) {
-                        await interaction.channel.send(`\`\`\`${e}\`\`\``)
+                        await user.send(`**An error occured: **\n\`\`\`${e}\`\`\``)
+                        console.error(e);
                     }
 
                 }
