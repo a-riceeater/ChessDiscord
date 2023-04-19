@@ -19,6 +19,8 @@ export default {
                     { name: 'server', value: 'server' }
                 )),
     async execute(interaction) {
+
+        let curMatch;
         const user = interaction.options.getUser('user');
         const nType = interaction.options.getString('notify-type')
 
@@ -102,6 +104,7 @@ export default {
                             await interaction.channel.send({ embeds: [acceptEmbed2] })
 
                             const match = new ChessMatch(JSON.stringify({ users: [interaction.user, user] }))
+                            curMatch = match;
                             matches.set(match.gameId, match)
 
                             console.log("NEW MATCH CREATED. ID:", match.gameId)
@@ -163,6 +166,7 @@ export default {
                             await interaction.channel.send({ embeds: [acceptEmbed2] })
 
                             const match = new ChessMatch(JSON.stringify({ users: [interaction.user, user] }))
+                            curMatch = match;
                             matches.set(match.gameId, match)
 
                             console.log("NEW MATCH CREATED. ID:", match.gameId)
@@ -176,6 +180,26 @@ export default {
                         console.error(e);
                     }
 
+                }
+
+               
+                const matchEmbed = new EmbedBuilder()
+                    .setTitle("Chess Match")
+                    .setDescription("Match ID: " + curMatch.gameId)
+                    .setColor("Blurple")
+                    .setTimestamp()
+                    .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+                    .addFields(
+                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii()}\`\`\`` }
+                    )
+
+                console.log(curMatch.chess.ascii())
+
+                if (nType == 'dm') {
+                    user.send({ embeds: [matchEmbed] })
+                    interaction.channel.send({ embeds: [matchEmbed] })
+                } else {
+                    interaction.channel.send({ embeds: [matchEmbed] })
                 }
             }, 1000)
         }
