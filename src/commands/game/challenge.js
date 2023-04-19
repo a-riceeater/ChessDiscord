@@ -190,7 +190,10 @@ export default {
                     .setTimestamp()
                     .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
                     .addFields(
-                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii()}\`\`\`` }
+                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii()}\`\`\`` },
+                        { name: 'White', value: curMatch.white.tag, inline: true },
+                        { name: 'Black', value: curMatch.black.tag, inline: true },
+                        { name: 'Turn', value: curMatch.white.tag, inline: false },
                     )
 
                 console.log(curMatch.chess.ascii())
