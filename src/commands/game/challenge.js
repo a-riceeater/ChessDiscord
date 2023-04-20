@@ -44,7 +44,7 @@ export default {
                 .setTimestamp()
                 .setFooter({ text: `Interaction created by ${interaction.user.tag}`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
-            interaction.reply({ embeds: [error] })
+            await interaction.reply({ embeds: [error] })
         } else {
             const sendingEmbed = new EmbedBuilder()
                 .setColor('#324ea8')
@@ -53,7 +53,7 @@ export default {
                 .setTimestamp()
                 .setFooter({ text: `Interaction created by ${interaction.user.tag}`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
-            interaction.reply({ embeds: [sendingEmbed] })
+            await interaction.reply({ embeds: [sendingEmbed] })
 
             setTimeout(async () => {
                 if (nType == 'dm') {
@@ -114,8 +114,7 @@ export default {
 
                         }
                     } catch (e) {
-                        await user.send(`**An error occured: **\n\`\`\`${e}\`\`\``)
-                        console.error(e);
+                        await response.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
                     }
 
                 } else {
@@ -144,7 +143,7 @@ export default {
 
                     try {
                         const filter = i => i.user.id === interaction.user.id;
-                        const confirmation = await resp.awaitMessageComponent({ filter });
+                        const confirmation = await resp.awaitMessageComponent({ filter, time: 60000 });
 
                         if (confirmation.customId === 'accept') {
 
@@ -176,8 +175,7 @@ export default {
 
                         }
                     } catch (e) {
-                        await user.send(`**An error occured: **\n\`\`\`${e}\`\`\``)
-                        console.error(e);
+                        await response.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
                     }
 
                 }
@@ -194,15 +192,16 @@ export default {
                         { name: 'White', value: curMatch.white.tag, inline: true },
                         { name: 'Black', value: curMatch.black.tag, inline: true },
                         { name: 'Turn', value: curMatch.white.tag, inline: false },
+                        { name: 'Move', value: 'Move with command \`/move\`', inline: true}
                     )
 
                 console.log(curMatch.chess.ascii())
 
                 if (nType == 'dm') {
                     user.send({ embeds: [matchEmbed] })
-                    interaction.channel.send({ embeds: [matchEmbed] })
+                    await interaction.channel.send({ embeds: [matchEmbed] })
                 } else {
-                    interaction.channel.send({ embeds: [matchEmbed] })
+                    await interaction.channel.send({ embeds: [matchEmbed] })
                 }
             }, 1000)
         }

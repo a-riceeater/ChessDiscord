@@ -5,7 +5,7 @@ export class ChessMatch {
     constructor(data) {
         data = JSON.parse(data);
         const white = data.users[Math.floor(Math.random() * data.users.length)];
-        
+
         this.users = data.users;
         this.white = white;
         this.gameId = __generateID();
@@ -17,20 +17,23 @@ export class ChessMatch {
             this.black = data.users[i]
         }
 
-	for (let i = 0; i < data.users.length; i++) {
-		const ums = userMatches.get(data.users[i].tag);
-		if (!ums) userMatches.set(data.users[i].tag, []);
 
-		let opponent = ''
-		for (let i2 = 0; i < data.users.length; i2++) {
-			if (data.users[i2] == data.users[i]) continue;
-			else opponent == data.users[i2];
-		}
+        for (let i = 0; i < data.users.length; i++) {
+            let ums = userMatches.get(data.users[i].tag);
+            if (!ums) { userMatches.set(data.users[i].tag, []); ums = []; }
 
-		ums.push([this.gameId, opponent]);
+            let opponent = ''
 
-		userMatches.set(data.users[i].tag, ums);
-	}
+            console.log(ums)
+            for (let i2 = 0; i2 < data.users.length; i2++) {
+                if (data.users[i2] == data.users[i]) continue;
+                else opponent == data.users[i2];
+            }
+
+            ums.push([this.gameId, opponent]);
+
+            userMatches.set(data.users[i].tag, ums);
+        }
     }
 }
 
@@ -48,13 +51,13 @@ function __generateID() {
     }
 
     result += "-"
-    
+
     for (let i = 0; i < 6; i++) {
         result += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
     }
 
     result += "-"
-    
+
     for (let i = 0; i < 6; i++) {
         result += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
     }
