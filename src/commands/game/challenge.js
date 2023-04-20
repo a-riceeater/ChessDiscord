@@ -115,6 +115,7 @@ export default {
                         }
                     } catch (e) {
                         await interaction.channel.send({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+                        return
                     }
 
                 } else {
@@ -176,6 +177,7 @@ export default {
                         }
                     } catch (e) {
                         await interaction.channel.send({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+                        return
                     }
 
                 }

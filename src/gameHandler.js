@@ -1,4 +1,4 @@
-import { matches, userMatches } from './matches.js'
+import { matches, userMatches, matchIds } from './matches.js'
 import { Chess } from 'chess.js'
 
 export class ChessMatch {
@@ -24,7 +24,6 @@ export class ChessMatch {
 
             let opponent = ''
 
-            console.log(ums)
             for (let i2 = 0; i2 < data.users.length; i2++) {
                 if (data.users[i2] == data.users[i]) continue;
                 else opponent == data.users[i2];
@@ -34,6 +33,8 @@ export class ChessMatch {
 
             userMatches.set(data.users[i].tag, ums);
         }
+
+        matchIds.set(this.gameId, data.users)
     }
 }
 

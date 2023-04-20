@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
-import { matches, userMatches } from '../../matches.js';
+import { matches, userMatches, matchIds } from '../../matches.js';
 import { ChessMatch } from '../../gameHandler.js';
 
 export default {
@@ -53,13 +53,23 @@ export default {
 
 					const filter = i => i.user.id === interaction.user.id;
 					try {
-						const confirmation = await response.awaitMessageComponent({ filter, time: 60_000 });
+						const selection = await response.awaitMessageComponent({ filter, time: 60_000 });
 
-						if (confirmation.customId === 'confirm') {
-						} else if (confirmation.customId === 'cancel') {
+						const gameId = selection.customId;
+						const match = matches.get(gameId);
+
+						if (!matchIds.has(gameId)) tr();
+						else {
+							if (!matchIds.get(gameId).includes(interaction.user.tag)) tr()
 						}
+
+						function tr() {
+							interaction.channel.send("❌ This match was either not found, or you are not a user participating in this match!")
+						}
+
 					} catch (e) {
-						await response.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+						await interaction.channel.send({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+						return
 					}
 				}
 			}
