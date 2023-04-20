@@ -49,7 +49,18 @@ export default {
 								.addOptions(labels),
 						);
 
-					await interaction.reply({ embeds: [embed], components: [row] })
+					const response = await interaction.reply({ embeds: [embed], components: [row] })
+
+					const filter = i => i.user.id === interaction.user.id;
+					try {
+						const confirmation = await response.awaitMessageComponent({ filter, time: 60_000 });
+
+						if (confirmation.customId === 'confirm') {
+						} else if (confirmation.customId === 'cancel') {
+						}
+					} catch (e) {
+						await response.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+					}
 				}
 			}
 		}
