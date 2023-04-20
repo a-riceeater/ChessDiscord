@@ -114,7 +114,7 @@ export default {
 
                         }
                     } catch (e) {
-                        await resp.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+                        await resp.edit({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
                     }
 
                 } else {
@@ -175,7 +175,7 @@ export default {
 
                         }
                     } catch (e) {
-                        await resp.editReply({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+                        await resp.edit({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
                     }
 
                 }
