@@ -45,7 +45,7 @@ export default {
 						.addComponents(
 							new StringSelectMenuBuilder()
 								.setCustomId('select')
-								.setPlaceholder('Nothing selected')
+								.setPlaceholder('Select a match to move in.')
 								.addOptions(labels),
 						);
 
@@ -55,20 +55,40 @@ export default {
 					try {
 						const selection = await response.awaitMessageComponent({ filter, time: 60_000 });
 
-						const gameId = selection.customId;
+						const gameId = selection.values[0]
 						const match = matches.get(gameId);
 
-						if (!matchIds.has(gameId)) tr();
+						if (!matchIds.has(gameId)) return tr();
 						else {
-							if (!matchIds.get(gameId).includes(interaction.user.tag)) tr()
+							const m = matchIds.get(gameId)
+							for (let i = 0; i < m.length; i++) {
+								if (m[i].tag == interaction.user.tag) break;
+
+								if (i = m.length - 1) {
+									return tr();
+								}
+							}
 						}
 
-						function tr() {
-							interaction.channel.send("❌ This match was either not found, or you are not a user participating in this match!")
+						async function tr() {
+							await selection.update({ content: "❌ This match was either not found, or you are not a user participating in this match!", components: [], embeds: [] });
+							return;
 						}
+
+
+						const typeEmbed = new EmbedBuilder()
+							.setTitle("Type your move...")
+							.setDescription("Message the move that you want to do.")
+							.addFields(
+								{ name: 'Example Move', value: 'Pe4 (Pawn to e4)', inline: true },
+								{ name: 'Game ID:', value: gameId, inline: true }
+							)
+							.setTimestamp()
+							.setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+						await selection.update({ embeds: [typeEmbed], components: [] })
 
 					} catch (e) {
-						await interaction.channel.send({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [] });
+						await selection.update({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [],  embeds: [] });
 						return
 					}
 				}
