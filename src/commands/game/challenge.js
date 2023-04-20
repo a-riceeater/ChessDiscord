@@ -29,7 +29,7 @@ export default {
             const error = new EmbedBuilder()
                 .setColor('#FF0000')
                 .setTitle("You cannot send a challenge to yourself")
-                .setDescription(`Nice try.`)
+                .setDescription(`Sorry!`)
                 .setTimestamp()
                 .setFooter({ text: `Interaction created by ${interaction.user.tag}`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 
@@ -188,9 +188,9 @@ export default {
                     .setDescription("Match ID: " + curMatch.gameId)
                     .setColor("Blurple")
                     .setTimestamp()
-                    .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+                    .setFooter({ text: `Powered by Chess.js`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
                     .addFields(
-                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii()}\`\`\`` },
+                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii().toLowerCase()}\`\`\`` },
                         { name: 'White', value: curMatch.white.tag, inline: true },
                         { name: 'Black', value: curMatch.black.tag, inline: true },
                         { name: 'Turn', value: curMatch.white.tag, inline: false },

@@ -1,4 +1,4 @@
-import { matches } from './matches.js'
+import { matches, userMatches } from './matches.js'
 import { Chess } from 'chess.js'
 
 export class ChessMatch {
@@ -16,6 +16,21 @@ export class ChessMatch {
             if (data.users[i] == white) continue
             this.black = data.users[i]
         }
+
+	for (let i = 0; i < data.users.length; i++) {
+		const ums = userMatches.get(data.users[i].tag);
+		if (!ums) userMatches.set(data.users[i].tag, []);
+
+		let opponent = ''
+		for (let i2 = 0; i < data.users.length; i2++) {
+			if (data.users[i2] == data.users[i]) continue;
+			else opponent == data.users[i2];
+		}
+
+		ums.push([this.gameId, opponent]);
+
+		userMatches.set(data.users[i].tag, ums);
+	}
     }
 }
 
