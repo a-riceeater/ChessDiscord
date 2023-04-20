@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, StringSelectMenuBuilder } from 'discord.js';
-import { matches, userMatches, matchIds } from '../../matches.js';
+import { matches, userMatches, matchIds, awaitingUsers } from '../../matches.js';
 import { ChessMatch } from '../../gameHandler.js';
 
 export default {
@@ -86,9 +86,11 @@ export default {
 							.setTimestamp()
 							.setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 						await selection.update({ embeds: [typeEmbed], components: [] })
+						awaitingUsers.push(interaction.user.id)
 
 					} catch (e) {
 						await selection.update({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [],  embeds: [] });
+						delete awaitingUsers[interaction.user.id]
 						return
 					}
 				}

@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
+import { awaitingUsers } from './matches.js';
 
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
@@ -21,3 +22,9 @@ const commandFolders = await fs.readdirSync('./src/commands');
   client.handleCommands(commandFolders, './src/commands');
   client.login(process.env.TOKEN);
 })();
+
+client.on("messageCreate", async (message) => {
+  if (!awaitingUsers.includes(message.author.id)) return;
+
+  message.reply("Ok!")
+})
