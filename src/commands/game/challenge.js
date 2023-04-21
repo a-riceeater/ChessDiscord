@@ -190,7 +190,7 @@ export default {
                     .setTimestamp()
                     .setFooter({ text: `Powered by Chess.js`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
                     .addFields(
-                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii().toLowerCase()}\`\`\`` },
+                        { name: 'Board', value: `\`\`\`${curMatch.chess.ascii().toLowerCase()}\nWhite\`\`\`` },
                         { name: 'White', value: curMatch.white.tag, inline: true },
                         { name: 'Black', value: curMatch.black.tag, inline: true },
                         { name: 'Turn', value: curMatch.white.tag, inline: false },

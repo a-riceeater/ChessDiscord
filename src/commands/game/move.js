@@ -80,17 +80,17 @@ export default {
 							.setTitle("Type your move...")
 							.setDescription("Message the move that you want to do.")
 							.addFields(
-								{ name: 'Example Move', value: 'Pe4 (Pawn to e4)', inline: true },
+								{ name: 'Example Move', value: 'p e2 e4 (Pawn from e2 to e4)', inline: true },
 								{ name: 'Game ID:', value: gameId, inline: true }
 							)
 							.setTimestamp()
 							.setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
 						await selection.update({ embeds: [typeEmbed], components: [] })
-						awaitingUsers.push(interaction.user.id)
+						awaitingUsers.set(interaction.user.id, gameId)
 
 					} catch (e) {
 						await selection.update({ content: 'Confirmation not received within 1 minute, cancelling :<', components: [],  embeds: [] });
-						delete awaitingUsers[interaction.user.id]
+						awaitingUsers.delete(interaction.user.id)
 						return
 					}
 				}

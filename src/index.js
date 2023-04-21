@@ -1,7 +1,7 @@
-import { Client, GatewayIntentBits, Collection } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, EmbedBuilder } from 'discord.js';
 import fs from 'fs';
 import dotenv from 'dotenv';
-import { awaitingUsers } from './matches.js';
+import { awaitingUsers, matches } from './matches.js';
 
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
@@ -24,7 +24,45 @@ const commandFolders = await fs.readdirSync('./src/commands');
 })();
 
 client.on("messageCreate", async (message) => {
-  if (!awaitingUsers.includes(message.author.id)) return;
+  if (!awaitingUsers.has(message.author.id)) return;
 
-  message.reply("Ok!")
+  // no match/user detection as it already has gone through two tests (in move.js command)
+
+  let move = message.content;
+  const matchId = awaitingUsers.get(message.author.id);
+  const match = matches.get(matchId)
+  const board = match.chess;
+
+  const piece = move.charAt(0).toLowerCase() || "";
+  const from = move.split(" ")[1] || "";
+  const to = move.split(" ")[2] || "";
+
+  try {
+    board.move({ to: to, piece: piece, color: board._turn, from: from })
+
+    const moved = new EmbedBuilder()
+      .setTitle("Moved!")
+      .setDescription(`Sucessfully moved "${piece}" from "${from}" to "${to}"`)
+      .setTimestamp()
+      .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+      .addFields(
+        { name: 'Board', value: `\`\`\`${board.ascii().toLowerCase()}\nWhite\`\`\`` }
+      )
+
+    await message.reply({ embeds: [moved] });
+  } catch (err) {
+    const error = new EmbedBuilder()
+      .setTitle("Invalid move!")
+      .setDescription(`"${piece}" from "${from}" to "${to}" is an invalid move.`)
+      .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
+      .setTimestamp()
+      .addFields(
+        { name: 'Board', value: `\`\`\`${board.ascii().toLowerCase()}\nWhite\`\`\`` }
+      )
+      .setColor("Red")
+
+      await message.reply({ embeds: [error] })
+  } finally {
+    awaitingUsers.delete(message.author.id)
+  }
 })
