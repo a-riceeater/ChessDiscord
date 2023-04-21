@@ -36,13 +36,14 @@ client.on("messageCreate", async (message) => {
   const piece = move.charAt(0).toLowerCase() || "";
   const from = move.split(" ")[1] || "";
   const to = move.split(" ")[2] || "";
+  const promote = move.split(" ")[3] || "";
 
   try {
-    board.move({ to: to, piece: piece, color: board._turn, from: from })
+    board.move({ to: to, piece: piece, color: board._turn, from: from, promote: promote })
 
     const moved = new EmbedBuilder()
       .setTitle("Moved!")
-      .setDescription(`Sucessfully moved "${piece}" from "${from}" to "${to}"`)
+      .setDescription(`Sucessfully moved "${piece}" from "${from}" to "${to}" with promote "${promote}"`)
       .setTimestamp()
       .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
       .addFields(
@@ -51,9 +52,10 @@ client.on("messageCreate", async (message) => {
 
     await message.reply({ embeds: [moved] });
   } catch (err) {
+    console.error(err.toString().split("\n")[0])
     const error = new EmbedBuilder()
       .setTitle("Invalid move!")
-      .setDescription(`"${piece}" from "${from}" to "${to}" is an invalid move.`)
+      .setDescription(`"${piece}" from "${from}" to "${to}" with promotion "${promote}" is an invalid move.`)
       .setFooter({ text: `ChessBot`, iconURL: 'https://i.imgur.com/NuAwthA.png' })
       .setTimestamp()
       .addFields(
